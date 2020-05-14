@@ -1,0 +1,45 @@
+---
+title: "Term Paper - Fundamentals"
+author: "Hannah Reitz & Sophie Hensgen"
+date: "5/6/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(openxlsx)
+library(xml2)
+library(rvest)
+library(jsonlite)
+library(robotstxt)
+library(RSocrata)
+library(dplyr)
+library(rlist)
+library(pipeR)
+```
+## Data from Wikipedia
+
+
+```{r}
+url <- "https://en.wikipedia.org/wiki/List_of_mass_shootings_in_the_United_States"
+t <- read_html(url)
+table <- t %>% html_nodes("#mw-content-text > div > table") %>% html_table(trim=T)
+
+table
+
+```
+
+Tabellen heraus nehmen aus dem großen df - hier einen Loop versuchen
+
+```{r}
+#ms17 <- table[4]
+
+anzahl <- c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+
+for {i in anzahl}
+ 
+
+```
