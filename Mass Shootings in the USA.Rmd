@@ -64,6 +64,9 @@ To Do:
 - alle mutaten damit alle integer sein 
 - wenn das gemacht alle joinen zu einer großen tabelle
 - in excel Extra Variablen hinzufügen
+- Datum in Zahlen ändern
+- zwei neue variablen, eine zwei Tage vor dem Event und 14 Tage danach
+- Description den Namen herausnehmen
 
 ```{r}
 newtab <- table[[1]]
