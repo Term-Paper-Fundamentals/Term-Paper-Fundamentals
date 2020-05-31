@@ -17,7 +17,31 @@ library(rlist)
 library(pipeR)
 
 ```
+## Theory and Hypotheses
+
+More dead people --> more media attention --> higher attention in Google trends
+
+newworthiness in den Medien
+
+1. The more people got injured, the longer the shooting stayed in the trends.
+
+2. The more deaths, the longer the shooting stayed in the trends.
+
+evtl. newswothiness in Kombination mit inequality
+
+3. The more caucasians got shot or died during the shooting, the longer it stayed
+in the trends.
+
+4. Shootings in richer areas, stayed longer in the trends.
+
+
+
+5. In states with looser gun control, shootings stayed longer in the trends
+
+
 ## Data from Wikipedia
+
+Erlärung welche Daten, wie gescrapt, wie sehen die Daten aus Deskription
 
 
 ```{r}
@@ -38,12 +62,14 @@ Ich glaube wir müssen die buchstaben aus injured rausholen damit wir es in eine
 newtab <- table[[1]]
 
 newtab <- newtab %>% full_join(table[[2]], by = c("Date", "Location", "Dead", "Injured", "Total", "Description"))
-
+ 
 
 class(newtab$Injured)
  
 class(as.integer(table[[3]]$Injured))
 table[[3]]$Injured
+
+table[[3]]
 ```
 
 Wenn wir das geschafft haben sollten wir diesen Loop nutzen können
