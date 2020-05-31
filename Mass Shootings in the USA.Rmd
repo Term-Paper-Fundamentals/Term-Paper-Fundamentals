@@ -58,18 +58,40 @@ hier Tabellen zusammensetzten
 erstes klappt, danach gibt es ein problem mit incompatiblen types. 
 Ich glaube wir müssen die buchstaben aus injured rausholen damit wir es in einen integer umändern können
 
+To Do:
+
+- gsub loop --> alle alle nicht zahlen rausziehen
+- alle mutaten damit alle integer sein 
+- wenn das gemacht alle joinen zu einer großen tabelle
+- in excel Extra Variablen hinzufügen
+
 ```{r}
 newtab <- table[[1]]
 
 newtab <- newtab %>% full_join(table[[2]], by = c("Date", "Location", "Dead", "Injured", "Total", "Description"))
- 
+newtab
+newtab <- newtab %>% full_join(tab, by = c("Date", "Location", "Dead", "Injured", "Total", "Description"))
 
-class(newtab$Injured)
- 
-class(as.integer(table[[3]]$Injured))
-table[[3]]$Injured
 
-table[[3]]
+tab18 <- table[[3]]
+tab18$Injured <- gsub("[n 1]", "", tab18$Injured, fixed = TRUE)
+tab18$Injured <- gsub("[n 2]", "", tab18$Injured, fixed = TRUE)
+tab18$Injured <- gsub("+", "", tab18$Injured, fixed = TRUE)
+tab18
+
+zahl <- c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+
+# nochmal drüber schauen!
+  for (k in zahl) {
+  k <- table[[k]]
+  k$Injured <- gsub("[n 1]", "", k$Injured, fixed = TRUE)
+}
+
+tab18<- gsub("n 1", "", tab18)
+tab <- table[[3]] %>%  
+    mutate(Injured = as.integer(Injured))
+tab
+
 ```
 
 Wenn wir das geschafft haben sollten wir diesen Loop nutzen können
