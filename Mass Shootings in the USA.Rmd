@@ -82,18 +82,28 @@ tab18$Injured <- gsub("[n 2]", "", tab18$Injured, fixed = TRUE)
 tab18$Injured <- gsub("+", "", tab18$Injured, fixed = TRUE)
 tab18
 
+
 zahl <- c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
 
+pol <- list()
 # nochmal drüber schauen!
   for (k in zahl) {
-  k <- table[[k]]
-  k$Injured <- gsub("[n 1]", "", k$Injured, fixed = TRUE)
+  list <- table[[k]]
+  list$Injured <- gsub("[n 1]", "", list$Injured, fixed = TRUE)
+  print(  list)
+  pol <- append(pol, list)
 }
+pol
+list
 
 tab18<- gsub("n 1", "", tab18)
 tab <- table[[3]] %>%  
     mutate(Injured = as.integer(Injured))
 tab
+
+for(l in zahl){
+  print(l)
+}
 
 ```
 
