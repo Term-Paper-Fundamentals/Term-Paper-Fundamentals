@@ -16,6 +16,7 @@ library(dplyr)
 library(rlist)
 library(pipeR)
 library(gtrendsR)
+library(lubridate)
 
 ```
 ## Theory and Hypotheses
@@ -70,77 +71,80 @@ To Do:
 
 ```{r}
 
-subs <- function(x) {
-   x <- gsub("[n 1]", "", x, fixed = TRUE)
-}
-
-tab18 <- table[[3]]
-
-for (i in tab18$Injured) {
-  subs(Injured)
-}
-
-tab18
-
-###################################
-
-
-for (i in tab18$Injured) {
-   i$Injured <- gsub("[n 1]", "", i$Injured, fixed = TRUE)
-}
-
-tab18
-
-subs(table[[3]])
-
-table[[3]]
-
-for (i in Injured) {
-  i$Injured <- gsub("[n 1]", "", i$Injured, fixed = TRUE)
-  i$Dead <- gsub("[n 1]", "", i$Dead, fixed = TRUE)
-  }
-
+# Removing unnecessary expressions
 
 for (i in 1:10) {
-   mutate(Injured = as.integer(Injured))
+   table[[i]]$Injured <- gsub("[n 1]", "", table[[i]]$Injured, fixed = TRUE)
+   table[[i]]$Injured <- gsub("[n 2]", "", table[[i]]$Injured, fixed = TRUE)
+   table[[i]]$Injured <- gsub("[n 3]", "", table[[i]]$Injured, fixed = TRUE)
+   table[[i]]$Injured <- gsub("[n 4]", "", table[[i]]$Injured, fixed = TRUE)
+   table[[i]]$Injured <- gsub("[n 5]", "", table[[i]]$Injured, fixed = TRUE)
+   table[[i]]$Injured <- gsub("[n 6]", "", table[[i]]$Injured, fixed = TRUE)
+   table[[i]]$Injured <- gsub("[n 7]", "", table[[i]]$Injured, fixed = TRUE)
+   table[[i]]$Injured <- gsub("[n 8]", "", table[[i]]$Injured, fixed = TRUE)
+   table[[i]]$Injured <- gsub("[n 9]", "", table[[i]]$Injured, fixed = TRUE)
+   table[[i]]$Injured <- gsub("+", "", table[[i]]$Injured, fixed = TRUE)
+   table[[i]]$Dead <- gsub("[n 1]", "", table[[i]]$Dead, fixed = TRUE)
+   table[[i]]$Dead <- gsub("[n 2]", "", table[[i]]$Dead, fixed = TRUE)
+   table[[i]]$Dead <- gsub("[n 3]", "", table[[i]]$Dead, fixed = TRUE)
+   table[[i]]$Dead <- gsub("[n 4]", "", table[[i]]$Dead, fixed = TRUE)
+   table[[i]]$Dead <- gsub("[n 5]", "", table[[i]]$Dead, fixed = TRUE)
+   table[[i]]$Dead <- gsub("[n 6]", "", table[[i]]$Dead, fixed = TRUE)
+   table[[i]]$Dead <- gsub("[n 7]", "", table[[i]]$Dead, fixed = TRUE)
+   table[[i]]$Dead <- gsub("[n 8]", "", table[[i]]$Dead, fixed = TRUE)
+   table[[i]]$Dead <- gsub("[n 9]", "", table[[i]]$Dead, fixed = TRUE)
+   table[[i]]$Dead <- gsub("+", "", table[[i]]$Dead, fixed = TRUE)
+   table[[i]]$Total <- gsub("+", "", table[[i]]$Total, fixed = TRUE)
 }
 
 
-######################################################
+# Storing Injured, Dead and Total as numerics
+
+for (i in 1:10) {
+  as.numeric(as.character(table[[i]]$Injured))
+  as.numeric(as.character(table[[i]]$Dead))
+  as.numeric(as.character(table[[i]]$Total))
+}
 
 
+#####################################
+# Date formatting not working
+#dates <- table[[1]]$Date
+#betterDates <- as.Date(dates,
+#format = "%m %d %Y")
 
+#table[[1]]
 
-tab18 <- table[[3]]
-tab18$Injured <- gsub("[n 1]", "", tab18$Injured, fixed = TRUE)
-tab18$Injured <- gsub("[n 2]", "", tab18$Injured, fixed = TRUE)
-tab18$Injured <- gsub("+", "", tab18$Injured, fixed = TRUE)
-tab18
+#for (i in 1:10) {
+  #parse_date_time2("table[[i]]$Date", orders = "mdy")
+  #as_date(table[[i]]$Date, tz = NULL, format = NULL)
+  #as_date(table[[i]]$Date, origin = lubridate::origin)
+  #c(as_date(table[[i]]$Date), as.Date(table[[i]]$Date))
+#  date <- as.Date(table[[i]]$Date, format = "%B %d, %Y")
+#}
 
+#table[[1]]
+####################################################
 
+# Joining all tables to one data frame
 
 newtab <- table[[1]]
 
-newtab <- newtab %>% full_join(table[[2]], by = c("Date", "Location", "Dead", "Injured", "Total", "Description"))
-newtab
-newtab <- newtab %>% full_join(tab, by = c("Date", "Location", "Dead", "Injured", "Total", "Description"))
-
-
-
-
-zahl <- c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
-
-# nochmal drüber schauen!
-  for (k in zahl) {
-  k <- table[[k]]
-  k$Injured <- gsub("[n 1]", "", k$Injured, fixed = TRUE)
+for (i in 1:10) {
+  newtab <- newtab %>% full_join(table[[i]], by = c("Date", "Location", "Dead", "Injured", "Total", "Description"))
 }
 
-tab18<- gsub("n 1", "", tab18)
-tab <- table[[3]] %>%  
-    mutate(Injured = as.integer(Injured))
-tab
+newtab
 
+# Works for simple dates, need to think about how we handle timespans --> at the moment converting them gives NAs
+
+newtab[["Date"]] <- as.Date(newtab$Date, format = "%B %d, %Y")
+newtab
+
+#Deleting the useless part of description --> possibly need to remove year as nobody googles the year when event is happening
+
+newtab$Description <- sub(":.*$", "", newtab$Description)
+newtab
 ```
 
 Wenn wir das geschafft haben sollten wir diesen Loop nutzen können
