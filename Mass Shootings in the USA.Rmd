@@ -15,6 +15,7 @@ library(RSocrata)
 library(dplyr)
 library(rlist)
 library(pipeR)
+library(gtrendsR)
 
 ```
 ## Theory and Hypotheses
@@ -33,7 +34,6 @@ evtl. newswothiness in Kombination mit inequality
 in the trends.
 
 4. Shootings in richer areas, stayed longer in the trends.
-
 
 
 5. In states with looser gun control, shootings stayed longer in the trends
@@ -69,11 +69,46 @@ To Do:
 - Description den Namen herausnehmen
 
 ```{r}
-newtab <- table[[1]]
 
-newtab <- newtab %>% full_join(table[[2]], by = c("Date", "Location", "Dead", "Injured", "Total", "Description"))
-newtab
-newtab <- newtab %>% full_join(tab, by = c("Date", "Location", "Dead", "Injured", "Total", "Description"))
+subs <- function(x) {
+   x <- gsub("[n 1]", "", x, fixed = TRUE)
+}
+
+tab18 <- table[[3]]
+
+for (i in tab18$Injured) {
+  subs(Injured)
+}
+
+tab18
+
+###################################
+
+
+for (i in tab18$Injured) {
+   i$Injured <- gsub("[n 1]", "", i$Injured, fixed = TRUE)
+}
+
+tab18
+
+subs(table[[3]])
+
+table[[3]]
+
+for (i in Injured) {
+  i$Injured <- gsub("[n 1]", "", i$Injured, fixed = TRUE)
+  i$Dead <- gsub("[n 1]", "", i$Dead, fixed = TRUE)
+  }
+
+
+for (i in 1:10) {
+   mutate(Injured = as.integer(Injured))
+}
+
+
+######################################################
+
+
 
 
 tab18 <- table[[3]]
@@ -83,6 +118,19 @@ tab18$Injured <- gsub("+", "", tab18$Injured, fixed = TRUE)
 tab18
 
 
+<<<<<<< HEAD
+=======
+
+newtab <- table[[1]]
+
+newtab <- newtab %>% full_join(table[[2]], by = c("Date", "Location", "Dead", "Injured", "Total", "Description"))
+newtab
+newtab <- newtab %>% full_join(tab, by = c("Date", "Location", "Dead", "Injured", "Total", "Description"))
+
+
+
+
+>>>>>>> cb25cf83d023ced63950d99d18430972c829d944
 zahl <- c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
 
 pol <- list()
@@ -121,7 +169,153 @@ newtab
 
 
 
+- 
 
 
 
+
+
+
+
+```{r}
+?gtrends
+```
+
+Gtrends 
+--> scraping von mehreren Namen auf einmal
+
+```{r}
+shootings <- gtrends(c("Milwaukee shooting", "Grantsville shooting", "El Paso shooting"), geo = "US", time = "2012-01-01 2020-05-07", low_search_volume = T)
+plot(shootings)
+shootings
+```
+
+Versuch eines Loop der einzelne outcomes speichert
+```{r}
+tab18 <- table[2]
+shootnames <- c("Jersey City Shooting", "Naval Air Station Pensacola shooting", "Miramar shootout", "Fresno shooting")
+
+listshooting <- list()
+for (i in shootnames){
+    shooting <- gtrends(keyword = i, geo = "US", time = "2018-01-01 2020-05-07", low_search_volume = T)
+    print(shooting)
+    listshooting <- append(listshooting, shooting)
+  }
+
+combineshootings <- rbind(listshooting[[1]], listshooting[[8]], listshooting[[15]], listshooting[[22]])
+combineshootings
+
+```
+
+Hier dran arbeiten dass ein column ein vektor darstellt und dann in einem Loop genutzt werden kann
+
+```{r}
+tab18 <- table[2]
+date <- as.vector(c("2019-12-10", "2019-12-6", "2019-12-5", "2019-11-19"))
+date <- as.Date(date, "%Y-%m-%d")
+
+pol <- as.vector(tab18['Date'])
+class(pol) 
+
+df <- data.frame()
+for (i in date){
+   df <- print(as.Date('i') - 2)
+}
+tab18$Date <- as.Date(tab18$Date)
+
+vector <- c()
+for(i in 1:ncol(tab18)){
+  d <- as.Date("i", format = "%Y-%m-%d")
+  vector <- c(vector, d)
+}
+vector
+
+tab18$Date <- as.Date( as.character(tab18$Date), format='%Y.%m.%d')
+
+tab18$Date <- as.Date(tab18$Date,format='%d.%m.%Y')
+
+tab18
+
+tab18 %>%
+   group_by(Deaths) %>%
+   mutate(Date=as.Date(Date, format = "%Y.%m.%d"))
+
+mutate(tab18, date= as.Date(Date, format= "%d.%m.%Y"))
+```
+Information on what is plotted on the y axis can be found here:
+
+https://support.google.com/trends/answer/4365533?hl=en
+
+A quick look at the structure of the `res` object.
+
+```{r}
+str(shootings)
+```
+
+Seems like the first element of this list is a `data.frame` which holds the main results of the API query.
+
+```{r}
+shootings$interest_over_time
+```
+
+## tidyr
+
+We will use the `tidyr` package to tidy up this data set. In addition, we will need different piping operators from `magrittr`.
+
+```{r}
+# install.packages("tidyverse")
+library(tidyverse)
+library(magrittr)
+```
+
+First, we transform the `data.frame` into a `tibble`.
+
+```{r}
+shootings_time <- as_tibble(shootings$interest_over_time)
+glimpse(shootings)
+```
+
+
+
+The resulting object is of class `gtrends`, for which the `gtrends` package provides a tailored plotting function.
+
+```{r}
+sandy <- gtrends(c("Sandy Hook shooting"), geo = "US", time = "2012-12-12 2012-12-30", low_search_volume = T)
+plot(sandy)
+sandy
+```
+
+
+Information on what is plotted on the y axis can be found here:
+
+https://support.google.com/trends/answer/4365533?hl=en
+
+A quick look at the structure of the `res` object.
+
+```{r}
+str(sandy)
+```
+
+
+
+```{r}
+sandy$interest_over_time
+```
+
+## tidyr
+
+We will use the `tidyr` package to tidy up this data set. In addition, we will need different piping operators from `magrittr`.
+
+```{r}
+# install.packages("tidyverse")
+library(tidyverse)
+library(magrittr)
+```
+
+First, we transform the `data.frame` into a `tibble`.
+
+```{r}
+sandy_time <- as_tibble(sandy$interest_over_time)
+glimpse(sandy)
+```
 
